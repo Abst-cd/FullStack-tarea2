@@ -1,55 +1,77 @@
 /* agarrar los elementos del DOM */
-const lista = document.getElementById('lista-tareas');
 const input = document.getElementById('nueva-tarea');
 const agregarBtn = document.getElementById('agregar-tarea');
 const eliminarBtn = document.getElementById('eliminar-tarea');
 const vaciarBtn = document.getElementById('vaciar-tareas');
 
+class gestorTareas {
+    constructor() {
+        this.tareas = [];
+        this.lista = document.getElementById('lista-tareas');
 
-
-/* función para agregar una tarea */
-function agregarTarea() {
-    const respuesta = input.value.trim();
-    if (respuesta === '') { /* si la respuesta esta vacia...*/
-        alert('INGRESE RESPUESTA VALIDA');
-        return;
     }
-    /* se crea un nuevo elemento de lista y se agrega a la lista */
-    const li = document.createElement('li');
-    li.textContent = respuesta;
-    lista.appendChild(li);
-    input.value = '';
 
-    const btnEliminar = document.createElement('button');
-    btnEliminar.textContent = 'Eliminar';
+    agregarTarea(tarea) {
+        this.tareas.push(tarea);
+        this.render();
+        
+
+        btnEliminar.addEventListener('click', () => {
+            this.tareas.removeChild(li);
+        });
+    }
+
+    eliminarTarea() {
+        this.tareas.pop();
+        this.render();
+    }
+    vaciarTareas() {
+        this.tareas = [];
+        this.render();
+    }
+    render (){
+    this.lista.innerHTML = '';
+
+    for(let i = 0; i < this.tareas.length; i++) {    
+        const li = document.createElement('li');
+        li.textContent = this.tareas[i];
+
+        const btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar tarea';
+
+        btnEliminar.addEventListener('click', () => {
+            this.tareas.splice(i, 1);
+            this.render();
+        });
     li.appendChild(btnEliminar);
-
-    btnEliminar.addEventListener('click', () => {
-        lista.removeChild(li);
-    });
-
-    
+    this.lista.appendChild(li);
 }
-
-function eliminarTarea() {
-    document.getElementById('lista-tareas').removeChild(lista.lastChild);
 }
-
-function vaciarTareas() {
-    document.getElementById('lista-tareas').innerHTML = '';
 }
 
 
 
-vaciarBtn.addEventListener('click', vaciarTareas);
+const gestor = new gestorTareas();
 
-input.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        agregarTarea();
-    }
-agregarBtn.addEventListener('click', agregarTarea);
-eliminarBtn.addEventListener('click', eliminarTarea);
 
+
+agregarBtn.addEventListener('click', () => {
+  gestor.agregarTarea(input.value);
+  input.value = '';
+});
+
+eliminarBtn.addEventListener('click', () => {
+    gestor.eliminarTarea();
+});
+vaciarBtn.addEventListener('click', () => {
+    gestor.vaciarTareas();
+});
+
+input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        gestor.agregarTarea(input.value);
+        input.value = '';
+    }  
 });
 
 
