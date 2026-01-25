@@ -12,7 +12,9 @@ class gestorTareas {
     }
 
     agregarTarea(tarea) {
+        
         this.tareas.push(tarea);
+        input.value = '';
         this.render();
         
 
@@ -50,10 +52,7 @@ class gestorTareas {
 }
 
 
-
 const gestor = new gestorTareas();
-
-
 
 agregarBtn.addEventListener('click', () => {
   gestor.agregarTarea(input.value);
@@ -69,6 +68,7 @@ vaciarBtn.addEventListener('click', () => {
 
 input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        e.preventDefault();
         gestor.agregarTarea(input.value);
         input.value = '';
     }  
